@@ -1,5 +1,6 @@
 const request = require('./node_modules/request');
-const api = 'https://api.thecatapi.com/v1/';
+const breed = process.argv[2];
+const api = 'https://api.thecatapi.com/v1/breeds/search?q=';
 
 const parseData = data => {
   if (data === "[]") return console.log("-breed not found-");
@@ -7,13 +8,14 @@ const parseData = data => {
   console.log(`Results:\n${parsed[0].description}`);
 };
 
-const getCat = (url, breed) => {
-  url += breed ? `breeds/search?q=${breed}` : "images/search";
-  request(url, (error, response, body) => {
-    if (!error) return parseData(body);
+const getCat = (breed, callback) => {
+  request(api + breed, (error, response, body) => {
+    if (!error) return callback(body);
     console.log('statusCode:', response && response.statusCode);
     console.error("Error:", error);
   });
 };
 
-getCat(api, "siberian");
+getCat(breed, parseData);
+
+module.exports = { getCat };
