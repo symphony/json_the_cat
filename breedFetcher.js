@@ -1,18 +1,19 @@
 const request = require('./node_modules/request');
-const api = 'https://api.thecatapi.com/v1/images/';
+const api = 'https://api.thecatapi.com/v1/';
 
 const parseData = data => {
+  if (data === "[]") return console.log("-breed not found-");
   const parsed = JSON.parse(data);
-  console.log(parsed);
-}
+  console.log(`Results:\n${parsed[0].description}`);
+};
 
 const getCat = (url, breed) => {
-  url += breed ? `?q=${breed}` : "";
+  url += breed ? `breeds/search?q=${breed}` : "images/search";
   request(url, (error, response, body) => {
+    if (!error) return parseData(body);
     console.log('statusCode:', response && response.statusCode);
-    if (error) return console.error("Error:", error);
-    parseData(body);
+    console.error("Error:", error);
   });
 };
 
-getCat(api, "sib");
+getCat(api, "siberian");
