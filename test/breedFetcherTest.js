@@ -14,5 +14,17 @@ describe('fetchBreedDescription', () => {
 
       done();
     });
+  }),
+  it('returns error message if breed not found', (done) => {
+    fetchBreedDescription('can\t possibly be a valid name for a breed', (err, desc) => {
+      const expectedErr = "-breed not found-";
+      // compare returned description
+      assert.equal(expectedErr, err);
+
+      // desc should be null
+      assert.equal(desc, null);
+
+      done();
+    });
   });
 });
